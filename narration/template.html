@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="ko" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@500;700;900&display=block"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #0d1117;
+        --panel: #161b22;
+        --line: #30363d;
+        --ink: #f0f6fc;
+        --muted: #8b949e;
+        --spring: #6db33f;
+        --blue: #58a6ff;
+        --purple: #bc8cff;
+        --amber: #e3b341;
+        --font-display: "Noto Sans KR", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        font-family: var(--font-display);
+        color: var(--ink);
+        background:
+          radial-gradient(900px 700px at 50% 35%, rgba(109, 179, 63, 0.12), transparent 70%),
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px) 0 0 / 60px 60px,
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px) 0 0 / 60px 60px,
+          var(--ground);
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+      }
+      .abs {
+        position: absolute;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+
+      /* header */
+      #brand {
+        left: 60px;
+        top: 70px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .title {
+        left: 0;
+        width: 1080px;
+        top: 130px;
+        text-align: center;
+        font-size: 80px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        opacity: 0;
+      }
+      .title .hl {
+        color: var(--spring);
+      }
+      .title small {
+        display: block;
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 0;
+      }
+
+      /* scene 1 */
+      .codebox {
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-radius: 28px;
+        padding: 80px 44px 0;
+        font-size: 30px;
+        line-height: 1.8;
+        opacity: 0;
+      }
+      .codebox .dots {
+        position: absolute;
+        top: 28px;
+        left: 32px;
+        display: flex;
+        gap: 14px;
+      }
+      .codebox .dots i {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--line);
+      }
+      .codebox .ln {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .codebox .ln b {
+        color: var(--blue);
+        font-weight: 500;
+      }
+      .codebox .ln s {
+        text-decoration: none;
+        color: var(--amber);
+      }
+      #code {
+        left: 80px;
+        top: 400px;
+        width: 920px;
+        height: 400px;
+      }
+      #strike {
+        left: 120px;
+        top: 590px;
+        width: 840px;
+        height: 6px;
+        border-radius: 3px;
+        background: #f85149;
+        transform-origin: 0 50%;
+        opacity: 0;
+      }
+      #oneline {
+        left: 0;
+        width: 1080px;
+        top: 860px;
+        text-align: center;
+        opacity: 0;
+      }
+      #oneline span {
+        display: inline-block;
+        padding: 18px 34px;
+        border-radius: 18px;
+        background: #010409;
+        border: 3px solid var(--spring);
+        font: 700 40px var(--font-mono);
+        color: var(--spring);
+      }
+      #q1 {
+        left: 0;
+        width: 1080px;
+        top: 1040px;
+        text-align: center;
+        font-size: 72px;
+        font-weight: 900;
+        line-height: 1.25;
+        opacity: 0;
+      }
+      #q1 em {
+        font-style: normal;
+        color: var(--spring);
+      }
+      #hero {
+        left: 0;
+        width: 1080px;
+        top: 430px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+      }
+      #hero .word {
+        margin-top: 40px;
+        font-size: 130px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1.05;
+        text-align: center;
+      }
+      #hero .word span {
+        color: var(--spring);
+      }
+
+      /* fact cards */
+      .fact {
+        left: 90px;
+        width: 900px;
+        min-height: 230px;
+        background: var(--panel);
+        border: 2px solid var(--line);
+        border-left: 12px solid var(--spring);
+        border-radius: 24px;
+        padding: 36px 44px;
+        opacity: 0;
+      }
+      .fact .k {
+        font: 700 30px var(--font-mono);
+        color: var(--spring);
+      }
+      .fact .v {
+        margin-top: 10px;
+        font-size: 56px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      .fact .d {
+        margin-top: 8px;
+        font-size: 34px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .fact.jpa {
+        border-left-color: var(--blue);
+      }
+      .fact.jpa .k {
+        color: var(--blue);
+      }
+
+      /* layered architecture */
+      .layer {
+        left: 150px;
+        width: 780px;
+        height: 132px;
+        border-radius: 22px;
+        background: var(--panel);
+        border: 3px solid var(--line);
+        padding: 14px 26px;
+        opacity: 0;
+      }
+      .layer .name {
+        font-size: 40px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        line-height: 52px;
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        white-space: nowrap;
+      }
+      .layer .name span {
+        font: 500 28px var(--font-mono);
+        color: var(--muted);
+        letter-spacing: 0;
+      }
+      .layer .role {
+        position: absolute;
+        right: 26px;
+        top: 20px;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .layer .run {
+        margin-top: 6px;
+        display: inline-block;
+        height: 46px;
+        padding: 0 16px;
+        border-radius: 12px;
+        background: #010409;
+        border: 2px solid var(--line);
+        font: 500 28px/42px var(--font-mono);
+        color: var(--spring);
+        white-space: nowrap;
+        opacity: 0;
+      }
+      #L0 {
+        top: 330px;
+      }
+      #L1 {
+        top: 490px;
+      }
+      #L2 {
+        top: 650px;
+      }
+      #L3 {
+        top: 810px;
+      }
+      #L4 {
+        top: 970px;
+      }
+      #L5 {
+        top: 1130px;
+        border-color: #1f6feb;
+      }
+      .link {
+        left: 536px;
+        width: 8px;
+        height: 28px;
+        border-radius: 4px;
+        background: var(--line);
+        opacity: 0;
+      }
+      #ret {
+        left: 590px;
+        top: 406px;
+        height: 46px;
+        padding: 0 16px;
+        border-radius: 12px;
+        background: var(--spring);
+        color: #0d1117;
+        font: 700 28px/46px var(--font-display);
+        white-space: nowrap;
+        opacity: 0;
+      }
+      .brk {
+        top: 0;
+        width: 100px;
+        opacity: 0;
+      }
+      .brk .bar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 10px;
+        border-radius: 5px;
+      }
+      .brk .lbl {
+        position: absolute;
+        top: 50%;
+        writing-mode: vertical-rl;
+        transform: translateY(-50%);
+        font-size: 40px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      #bS {
+        left: 30px;
+        top: 330px;
+        height: 452px;
+      }
+      #bS .bar {
+        right: 0;
+        background: var(--spring);
+      }
+      #bS .lbl {
+        left: 10px;
+        transform: translateY(-50%) rotate(180deg);
+        color: var(--spring);
+      }
+      #bJ {
+        left: 950px;
+        top: 650px;
+        height: 292px;
+      }
+      #bJ .bar {
+        left: 0;
+        background: var(--blue);
+      }
+      #bJ .lbl {
+        left: 30px;
+        color: var(--blue);
+      }
+      #done {
+        left: 0;
+        width: 1080px;
+        top: 700px;
+        text-align: center;
+        opacity: 0;
+      }
+      #done span {
+        display: inline-block;
+        padding: 26px 56px;
+        border-radius: 26px;
+        background: var(--spring);
+        color: #0d1117;
+        font-size: 64px;
+        font-weight: 900;
+        transform: rotate(-4deg);
+        box-shadow: 0 20px 60px rgba(109, 179, 63, 0.35);
+      }
+
+      /* entity mapping */
+      #ent {
+        left: 140px;
+        top: 340px;
+        width: 800px;
+        height: 400px;
+        padding-top: 76px;
+      }
+      #ent .ln {
+        border-radius: 10px;
+        padding: 0 10px;
+        margin: 0 -10px;
+      }
+      #ent .ln.at {
+        color: var(--amber);
+      }
+      #map {
+        left: 0;
+        width: 1080px;
+        top: 760px;
+        text-align: center;
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--muted);
+        opacity: 0;
+      }
+      #map b {
+        color: var(--spring);
+        font-size: 48px;
+      }
+      #tbl {
+        left: 140px;
+        top: 840px;
+        width: 800px;
+        border-radius: 24px;
+        border: 3px solid #1f6feb;
+        background: var(--panel);
+        overflow: hidden;
+        opacity: 0;
+      }
+      #tbl .cap {
+        padding: 16px 28px;
+        font: 700 34px var(--font-mono);
+        color: var(--blue);
+        border-bottom: 2px solid var(--line);
+      }
+      #tbl .row {
+        display: flex;
+        font: 500 34px/80px var(--font-mono);
+        text-align: center;
+      }
+      #tbl .row div {
+        flex: 1;
+        border-right: 2px solid var(--line);
+      }
+      #tbl .row div:last-child {
+        border-right: 0;
+      }
+      #tbl .row.h {
+        color: var(--muted);
+        background: #0d1117;
+        font-weight: 700;
+      }
+      #tbl .row.d div {
+        opacity: 0;
+      }
+      #sql {
+        left: 0;
+        width: 1080px;
+        top: 1190px;
+        text-align: center;
+        opacity: 0;
+      }
+      #sql span {
+        display: inline-block;
+        padding: 12px 26px;
+        border-radius: 16px;
+        background: #010409;
+        border: 3px solid var(--spring);
+        font: 700 30px var(--font-mono);
+        color: var(--spring);
+        white-space: nowrap;
+      }
+
+      /* outro */
+      #outro {
+        left: 0;
+        width: 1080px;
+        top: 520px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+      }
+      #outro .row {
+        display: flex;
+        gap: 30px;
+        margin-top: 60px;
+      }
+      #outro .btn {
+        padding: 30px 54px;
+        border-radius: 999px;
+        font-size: 56px;
+        font-weight: 900;
+        background: var(--ink);
+        color: var(--ground);
+      }
+      #outro .btn.red {
+        background: #ff0033;
+        color: #fff;
+      }
+      #outro .tag {
+        margin-top: 40px;
+        font: 700 40px var(--font-mono);
+        color: var(--muted);
+      }
+
+      #prog {
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 10px;
+        background: var(--spring);
+        transform-origin: 0 50%;
+      }
+
+      /* captions */
+      #cap {
+        left: 60px;
+        width: 960px;
+        top: 1320px;
+        height: 240px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      #cap .cue {
+        position: absolute;
+        top: 0;
+        max-width: 960px;
+        padding: 16px 30px;
+        border-radius: 18px;
+        background: rgba(1, 4, 9, 0.82);
+        font-size: 50px;
+        font-weight: 700;
+        line-height: 1.35;
+        text-align: center;
+        word-break: keep-all;
+        opacity: 0;
+      }
+      #cap .cue b {
+        color: var(--spring);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="{{TOTAL}}"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!--{{AUDIO}}-->
+
+      <div id="stage" class="clip" data-start="0" data-duration="{{TOTAL}}" data-track-index="0">
+        <div id="brand" class="abs">
+          <svg width="52" height="52" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" fill="#6db33f" />
+            <path d="M28 72 C26 44 46 26 76 24 C78 54 60 74 30 74 Z" fill="#fff" />
+            <path d="M30 72 C40 58 52 48 66 38" stroke="#6db33f" stroke-width="5" fill="none" stroke-linecap="round" />
+          </svg>
+          <span>Spring Boot + JPA 90초 정리</span>
+        </div>
+
+        <!-- scene 1: hook -->
+        <div id="code" class="abs mono codebox">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="ln"><b>String</b> sql = <s>"INSERT INTO member..."</s>;</div>
+          <div class="ln">ps = conn.prepareStatement(sql);</div>
+          <div class="ln">ps.setString(1, name);</div>
+          <div class="ln">ps.executeUpdate();</div>
+        </div>
+        <div id="strike" class="abs" data-layout-allow-overlap></div>
+        <div id="oneline" class="abs"><span>memberRepository.save(member);</span></div>
+        <div id="q1" class="abs">SQL 없이<br /><em>DB를 다룬다면?</em></div>
+        <div id="hero" class="abs">
+          <svg width="280" height="280" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" fill="#6db33f" />
+            <path d="M28 72 C26 44 46 26 76 24 C78 54 60 74 30 74 Z" fill="#fff" />
+            <path d="M30 72 C40 58 52 48 66 38" stroke="#6db33f" stroke-width="5" fill="none" stroke-linecap="round" />
+          </svg>
+          <div class="word">Spring Boot<br /><span>+ JPA</span></div>
+        </div>
+
+        <!-- scene 2: spring boot -->
+        <div id="t2" class="abs title"><span class="hl">Spring Boot</span>란?</div>
+        <div id="f1" class="abs fact" style="top: 420px">
+          <div class="k">FRAMEWORK</div>
+          <div class="v">자바 웹 프레임워크</div>
+          <div class="d">애플리케이션을 빠르게 만들어 줍니다</div>
+        </div>
+        <div id="f2" class="abs fact" style="top: 690px">
+          <div class="k">AUTO CONFIG</div>
+          <div class="v">내장 서버 + 자동 설정</div>
+          <div class="d">복잡한 설정 없이 바로 실행</div>
+        </div>
+        <div id="f3" class="abs fact" style="top: 960px">
+          <div class="k">DI / IoC</div>
+          <div class="v">객체 생성과 연결</div>
+          <div class="d">스프링 컨테이너가 대신 관리</div>
+        </div>
+
+        <!-- scene 3: jpa -->
+        <div id="t3" class="abs title"><span class="hl">JPA</span>란?</div>
+        <div id="g1" class="abs fact jpa" style="top: 420px">
+          <div class="k">ORM STANDARD</div>
+          <div class="v">객체 ↔ 테이블 연결</div>
+          <div class="d">자바 ORM 표준 명세</div>
+        </div>
+        <div id="g2" class="abs fact jpa" style="top: 690px">
+          <div class="k">HIBERNATE</div>
+          <div class="v">대표 구현체</div>
+          <div class="d">실제 동작을 담당합니다</div>
+        </div>
+        <div id="g3" class="abs fact jpa" style="top: 960px">
+          <div class="k">NO RAW SQL</div>
+          <div class="v">SQL 대신 객체로</div>
+          <div class="d">쿼리는 자동으로 만들어집니다</div>
+        </div>
+
+        <!-- scenes 4, 5, 7: layered architecture -->
+        <div id="t4" class="abs title">DB까지 <span class="hl">6</span>개 층</div>
+        <div id="t5" class="abs title">회원 조회 흐름</div>
+        <div id="t7" class="abs title">한 줄 정리</div>
+
+        <div id="k0" class="abs link" style="top: 466px"></div>
+        <div id="k1" class="abs link" style="top: 626px"></div>
+        <div id="k2" class="abs link" style="top: 786px"></div>
+        <div id="k3" class="abs link" style="top: 946px"></div>
+        <div id="k4" class="abs link" style="top: 1106px"></div>
+
+        <div id="L0" class="abs layer">
+          <div class="name">Controller<span>@RestController</span></div>
+          <div class="role">요청 받기</div>
+          <div class="run">GET /members/1</div>
+        </div>
+        <div id="L1" class="abs layer">
+          <div class="name">Service<span>@Service</span></div>
+          <div class="role">비즈니스 로직</div>
+          <div class="run">memberService.find(1)</div>
+        </div>
+        <div id="L2" class="abs layer">
+          <div class="name">Repository<span>JpaRepository</span></div>
+          <div class="role">데이터 접근</div>
+          <div class="run">repository.findById(1)</div>
+        </div>
+        <div id="L3" class="abs layer">
+          <div class="name">JPA / Hibernate<span>ORM</span></div>
+          <div class="role">SQL 생성</div>
+          <div class="run">select * from member where id=1</div>
+        </div>
+        <div id="L4" class="abs layer">
+          <div class="name">JDBC<span>Driver</span></div>
+          <div class="role">DB와 통신</div>
+          <div class="run">SQL 전송 →</div>
+        </div>
+        <div id="L5" class="abs layer">
+          <div class="name">Database<span>MySQL</span></div>
+          <div class="role">데이터 저장</div>
+          <div class="run">id=1, name='kim'</div>
+        </div>
+        <div id="ret" class="abs">↑ Member 객체 반환</div>
+
+        <div id="bS" class="abs brk"><div class="bar"></div><div class="lbl">Spring Boot</div></div>
+        <div id="bJ" class="abs brk"><div class="bar"></div><div class="lbl">JPA</div></div>
+
+        <div id="done" class="abs" data-layout-allow-overlap><span>이걸로 백엔드 기본 끝!</span></div>
+
+        <!-- scene 6: entity mapping -->
+        <div id="t6" class="abs title"><span class="hl">Entity</span> ↔ Table</div>
+        <div id="ent" class="abs mono codebox">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="ln at" id="e0">@Entity</div>
+          <div class="ln" id="e1"><b>class</b> Member {</div>
+          <div class="ln" id="e2">&nbsp;&nbsp;<s>@Id</s> <b>Long</b> id;</div>
+          <div class="ln" id="e3">&nbsp;&nbsp;<b>String</b> name;</div>
+          <div class="ln" id="e4">&nbsp;&nbsp;<b>int</b> age;</div>
+        </div>
+        <div id="map" class="abs"><b>⇅</b> 클래스 = 테이블 · 필드 = 컬럼</div>
+        <div id="tbl" class="abs">
+          <div class="cap">TABLE member</div>
+          <div class="row h"><div id="h0">id</div><div id="h1">name</div><div id="h2">age</div></div>
+          <div class="row d"><div>1</div><div>'kim'</div><div>27</div></div>
+        </div>
+        <div id="sql" class="abs"><span>insert into member (name, age) values (?, ?)</span></div>
+
+        <!-- scene 8: outro -->
+        <div id="outro" class="abs">
+          <svg width="240" height="240" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" fill="#6db33f" />
+            <path d="M28 72 C26 44 46 26 76 24 C78 54 60 74 30 74 Z" fill="#fff" />
+            <path d="M30 72 C40 58 52 48 66 38" stroke="#6db33f" stroke-width="5" fill="none" stroke-linecap="round" />
+          </svg>
+          <div class="row">
+            <div class="btn red">구독</div>
+            <div class="btn">좋아요</div>
+          </div>
+          <div class="tag">Spring Boot · JPA · DB</div>
+        </div>
+
+        <div id="cap" class="abs"></div>
+        <div id="prog" class="abs"></div>
+      </div>
+    </div>
+
+    <script>
+      /*{{DATA}}*/
+      const S = (id) => SCENES[id].start;
+      const E = (id) => SCENES[id].start + SCENES[id].dur;
+      const cue = (id, i) => CUES.find((c) => c.scene === id && c.i === i).t0;
+      const LAYERS = ["#L0", "#L1", "#L2", "#L3", "#L4", "#L5"];
+      const LINKS = ["#k0", "#k1", "#k2", "#k3", "#k4"];
+
+      // captions: one element per cue, key terms highlighted
+      const cap = document.getElementById("cap");
+      const cueEls = CUES.map((c) => {
+        const el = document.createElement("div");
+        el.className = "cue";
+        el.innerHTML = c.text.replace(
+          /(스프링 부트|JPA|SQL|ORM|하이버네이트|JDBC|findById|select|insert|Member|엔티티)/g,
+          "<b>$1</b>"
+        );
+        cap.appendChild(el);
+        return el;
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const pop = { opacity: 1, scale: 1, y: 0, x: 0, duration: 0.45, ease: "back.out(1.6)" };
+      const show = (sel, t, from = { y: 30 }) => tl.fromTo(sel, { opacity: 0, scale: 0.96, ...from }, pop, t);
+      const hide = (sel, t) => tl.to(sel, { opacity: 0, duration: 0.3, ease: "power2.in" }, t);
+      const lit = (sel, t, on = true) =>
+        tl.to(sel, { borderColor: on ? "#6db33f" : "#30363d", duration: 0.3 }, t);
+
+      // edge-tts cues overlap slightly; end each one before the next begins
+      CUES.forEach((c, i) => {
+        const next = CUES[i + 1];
+        const end = next && next.t0 < c.t1 + 0.1 ? next.t0 - 0.12 : c.t1;
+        tl.fromTo(cueEls[i], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.1 }, c.t0);
+        tl.to(cueEls[i], { opacity: 0, duration: 0.1 }, end);
+      });
+      tl.fromTo("#prog", { scaleX: 0 }, { scaleX: 1, duration: {{TOTAL}}, ease: "none" }, 0);
+
+      // 1. hook: boilerplate JDBC collapses into one repository call
+      show("#code", 0.1);
+      tl.fromTo("#strike", { opacity: 1, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: "power2.out" }, 1.2);
+      tl.to("#code", { opacity: 0.35, duration: 0.3 }, 1.6);
+      show("#oneline", 1.8, { y: 40 });
+      show("#q1", cue("s1", 1));
+      hide(["#code", "#strike", "#oneline", "#q1"], cue("s1", 2) - 0.3);
+      tl.fromTo("#hero", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, cue("s1", 2));
+      tl.fromTo("#hero svg", { rotation: -90 }, { rotation: 0, duration: 0.8, ease: "power3.out" }, cue("s1", 2));
+      hide("#hero", E("s1") - 0.3);
+
+      // 2. spring boot
+      show("#t2", S("s2"));
+      show("#f1", cue("s2", 0), { x: -60 });
+      show("#f2", cue("s2", 1), { x: -60 });
+      show("#f3", cue("s2", 3), { x: -60 });
+      hide(["#t2", "#f1", "#f2", "#f3"], E("s2") - 0.3);
+
+      // 3. jpa
+      show("#t3", S("s3"));
+      show("#g1", cue("s3", 0), { x: -60 });
+      show("#g2", cue("s3", 1), { x: -60 });
+      show("#g3", cue("s3", 2), { x: -60 });
+      hide(["#t3", "#g1", "#g2", "#g3"], E("s3") - 0.3);
+
+      // 4. six layers, revealed as the narration names them
+      show("#t4", S("s4"));
+      LAYERS.forEach((l, i) => {
+        show(l, cue("s4", i + 1), { x: 80 });
+        if (i) tl.to(LINKS[i - 1], { opacity: 1, duration: 0.3 }, cue("s4", i + 1));
+      });
+      hide("#t4", E("s4") - 0.3);
+
+      // 5. request travels down, the result comes back up
+      show("#t5", S("s5"));
+      const step = (i, t) => {
+        if (i) lit(LAYERS[i - 1], t, false);
+        lit(LAYERS[i], t);
+        if (i) tl.to(LINKS[i - 1], { backgroundColor: "#6db33f", duration: 0.3 }, t);
+        show(LAYERS[i] + " .run", t + 0.15, { x: -20 });
+      };
+      step(0, cue("s5", 0));
+      step(1, cue("s5", 1));
+      step(2, cue("s5", 2) + 0.8);
+      step(3, cue("s5", 3) + 0.6);
+      step(4, cue("s5", 4));
+      step(5, cue("s5", 4) + 0.9);
+      lit("#L5", cue("s5", 5), false);
+      lit("#L0", cue("s5", 5));
+      tl.fromTo("#ret", { opacity: 0, y: 700 }, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, cue("s5", 5));
+      hide("#t5", E("s5") - 0.3);
+      hide([...LAYERS, ...LINKS, "#ret"], E("s5") - 0.3);
+
+      // 6. entity <-> table
+      show("#t6", S("s6"));
+      show("#ent", S("s6") + 0.2);
+      show("#tbl", cue("s6", 1), { y: 40 });
+      tl.to("#map", { opacity: 1, duration: 0.3 }, cue("s6", 1) + 0.4);
+      tl.to("#e1", { backgroundColor: "rgba(88,166,255,0.18)", duration: 0.3 }, cue("s6", 1) + 0.8);
+      tl.to("#tbl .cap", { backgroundColor: "rgba(88,166,255,0.18)", duration: 0.3 }, cue("s6", 1) + 0.8);
+      ["#e2", "#e3", "#e4"].forEach((f, i) => {
+        const t = cue("s6", 2) + i * 0.5;
+        tl.to(f, { backgroundColor: "rgba(109,179,63,0.22)", color: "#f0f6fc", duration: 0.25 }, t);
+        tl.to("#h" + i, { backgroundColor: "rgba(109,179,63,0.22)", color: "#f0f6fc", duration: 0.25 }, t);
+      });
+      show("#sql", cue("s6", 4), { y: 30 });
+      tl.to("#tbl .row.d div", { opacity: 1, duration: 0.3, stagger: 0.12 }, cue("s6", 4) + 0.5);
+      hide(["#t6", "#ent", "#map", "#tbl", "#sql"], E("s6") - 0.3);
+
+      // 7. recap: bring the layers back and bracket who owns what
+      show("#t7", S("s7"));
+      tl.set(".layer .run", { opacity: 0 }, S("s7"));
+      tl.set(LAYERS, { borderColor: "#30363d" }, S("s7"));
+      tl.set("#L5", { borderColor: "#1f6feb" }, S("s7"));
+      tl.set(LINKS, { backgroundColor: "#30363d" }, S("s7"));
+      tl.to([...LAYERS, ...LINKS], { opacity: 1, duration: 0.4, stagger: 0.04 }, S("s7"));
+      tl.fromTo("#bS", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.4 }, cue("s7", 1));
+      lit(["#L0", "#L1", "#L2"], cue("s7", 1));
+      tl.fromTo("#bJ", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.4 }, cue("s7", 2));
+      tl.to(["#L2", "#L3"], { borderColor: "#58a6ff", duration: 0.3 }, cue("s7", 2));
+      tl.to([...LAYERS, ...LINKS, "#bS", "#bJ"], { opacity: 0.25, duration: 0.3 }, cue("s7", 3) - 0.1);
+      tl.fromTo("#done", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, cue("s7", 3));
+      tl.to("#stage > .abs:not(#brand):not(#cap):not(#outro):not(#prog)", { opacity: 0, duration: 0.35 }, E("s7") - 0.6);
+
+      // 8. outro
+      tl.fromTo("#outro", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.6)" }, S("s8"));
+      tl.fromTo("#outro .btn", { scale: 0.6 }, { scale: 1, duration: 0.4, ease: "back.out(2.5)", stagger: 0.2 }, S("s8") + 0.3);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

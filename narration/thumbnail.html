@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@800&family=Noto+Sans+KR:wght@700;900&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        color: #f0f6fc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background:
+          radial-gradient(1000px 900px at 50% 40%, rgba(109, 179, 63, 0.3), transparent 70%),
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px) 0 0 / 60px 60px,
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) 0 0 / 60px 60px,
+          #0d1117;
+      }
+      .logo {
+        width: 220px;
+        height: 220px;
+        filter: drop-shadow(0 20px 50px rgba(109, 179, 63, 0.5));
+      }
+      .kicker {
+        margin-top: 40px;
+        font-size: 64px;
+        font-weight: 900;
+        color: #0d1117;
+        background: #ffd33d;
+        padding: 10px 40px;
+        border-radius: 18px;
+        transform: rotate(-3deg);
+      }
+      h1 {
+        margin-top: 40px;
+        font-size: 150px;
+        font-weight: 900;
+        line-height: 1.02;
+        letter-spacing: -0.04em;
+        text-align: center;
+        text-shadow: 0 10px 0 #3d6b22;
+      }
+      h1 span {
+        color: #6db33f;
+        text-shadow: none;
+      }
+      .sub {
+        margin-top: 36px;
+        font-size: 96px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+      .steps {
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .step {
+        width: 700px;
+        padding: 12px 0;
+        border-radius: 24px;
+        background: #6db33f;
+        color: #0d1117;
+        text-align: center;
+        font: 800 64px/1.1 "JetBrains Mono", monospace;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+      }
+      .step.db {
+        background: #1f6feb;
+        color: #fff;
+      }
+      .arrow {
+        font-size: 40px;
+        line-height: 1;
+        color: #6db33f;
+        font-weight: 900;
+      }
+    </style>
+  </head>
+  <body>
+    <svg class="logo" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="46" fill="#6db33f" />
+      <path d="M28 72 C26 44 46 26 76 24 C78 54 60 74 30 74 Z" fill="#fff" />
+      <path d="M30 72 C40 58 52 48 66 38" stroke="#6db33f" stroke-width="5" fill="none" stroke-linecap="round" />
+    </svg>
+    <div class="kicker">백엔드 입문 필수</div>
+    <h1>Spring Boot<br /><span>+ JPA</span></h1>
+    <div class="sub">90초 정리</div>
+    <div class="steps">
+      <div class="step">Controller</div>
+      <div class="arrow">▼</div>
+      <div class="step">Service</div>
+      <div class="arrow">▼</div>
+      <div class="step">JPA</div>
+      <div class="arrow">▼</div>
+      <div class="step db">DB</div>
+    </div>
+  </body>
+</html>
